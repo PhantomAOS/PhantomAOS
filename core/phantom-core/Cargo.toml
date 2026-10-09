@@ -1,0 +1,11 @@
+[package]
+name = "phantom-core"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "phantom_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+jni = "0.21"
