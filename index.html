@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="google-site-verification" content="mCkrGeKvPZjkahij6YGuVQHuU-jbaTDjHw-GfKs0Tvg" />
+<title>PhantomAOS – Rust-based Terminal and Linux Environment for Android</title>
+<meta name="description" content="PhantomAOS is a from-scratch, Rust-powered terminal and Linux environment for Android, built for security researchers, ethical hackers and developers. No root required.">
+<link rel="canonical" href="https://phantomaos.github.io/PhantomAOS/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PhantomAOS – Rust-based Terminal and Linux Environment for Android">
+<meta property="og:description" content="Real PTY terminal, isolated Linux via PRoot, no root required. Memory-safe by design.">
+<meta property="og:url" content="https://phantomaos.github.io/PhantomAOS/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"PhantomAOS","applicationCategory":"DeveloperApplication","operatingSystem":"Android","description":"A from-scratch, Rust-powered terminal and Linux environment for Android, built for security researchers, ethical hackers and developers. No root required.","codeRepository":"https://github.com/PhantomAOS/PhantomAOS","license":"https://www.gnu.org/licenses/gpl-3.0.html","url":"https://phantomaos.github.io/PhantomAOS/"}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eceff3;--ink:#131a26;--mute:#4d586a;--line:#c9d0da;--accent:#0b7d78;--term:#0f1622;--termtxt:#d7e0ee}
+@media (prefers-color-scheme:dark){:root{--bg:#0c121c;--ink:#e6ebf3;--mute:#9aa6b8;--line:#263044;--accent:#4fd1c5;--term:#070b12}}
+*{box-sizing:border-box}
+html{scroll-padding-top:1rem}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.0625rem/1.65 Manrope,system-ui,sans-serif}
+main{max-width:46rem;margin:0 auto;padding:3rem 1.25rem 4rem}
+h1{font-size:clamp(2.6rem,9vw,4.4rem);line-height:1;letter-spacing:-.03em;font-weight:800;margin:0 0 1rem}
+h2{font-size:1.35rem;margin:2.75rem 0 .75rem;letter-spacing:-.01em}
+p{margin:0 0 1rem;max-width:62ch}
+.lead{font-size:1.2rem;color:var(--mute)}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.btn{display:inline-block;background:var(--accent);color:var(--bg);font-weight:600;padding:.7rem 1.2rem;border-radius:6px;text-decoration:none;margin-right:.75rem}
+.term{background:var(--term);color:var(--termtxt);font:400 .9rem/1.7 "JetBrains Mono",ui-monospace,monospace;padding:1.1rem 1.2rem;border-radius:8px;margin:2rem 0;overflow-x:auto;white-space:pre}
+.term b{color:var(--accent);font-weight:600}
+.term span{display:block;opacity:0;animation:in .01s forwards}
+.term span:nth-child(1){animation-delay:.2s}.term span:nth-child(2){animation-delay:.7s}.term span:nth-child(3){animation-delay:.95s}.term span:nth-child(4){animation-delay:1.2s}.term span:nth-child(5){animation-delay:1.45s}.term span:nth-child(6){animation-delay:1.7s}
+@keyframes in{to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.term span{opacity:1;animation:none}}
+ul{padding-left:1.2rem;margin:0 0 1rem}li{margin-bottom:.5rem}
+.note{border-left:3px solid var(--line);padding-left:1rem;color:var(--mute)}
+footer{border-top:1px solid var(--line);margin-top:3rem;padding-top:1.25rem;color:var(--mute);font-size:.95rem}
+</style>
+</head>
+<body>
+<main>
+<h1>PhantomAOS</h1>
+<p class="lead">PhantomAOS is a from-scratch terminal and Linux environment for Android, written in Rust. It is built for security researchers, ethical hackers and developers, and needs no root.</p>
+<p><a class="btn" href="https://github.com/PhantomAOS/PhantomAOS">View on GitHub</a><a href="https://github.com/PhantomAOS/PhantomAOS#readme">Read the README</a></p>
+
+<div class="term" role="img" aria-label="Summary of PhantomAOS: Rust core, real PTY, PRoot Linux, no root, early development"><span><b>$</b> cat ABOUT</span><span>core      Rust (forkpty-based PTY engine)</span><span>app       Kotlin, linked to the core over JNI</span><span>linux     isolated environments via PRoot</span><span>root      not required</span><span>status    early development (Phase 2)</span></div>
+
+<h2>What makes PhantomAOS different</h2>
+<ul>
+<li><strong>Rust core engine.</strong> A real <code>forkpty()</code> terminal with full job control (Ctrl+C, Ctrl+Z, background processes), not a fake shell wrapper.</li>
+<li><strong>No root required.</strong> Linux environments run isolated through PRoot.</li>
+<li><strong>Memory-safe by design.</strong> A security tool should not be an attack surface itself.</li>
+<li><strong>Built for the job.</strong> Split-screen multi-terminal, macro keyboard, SSH/VNC client and a curated package manager (<code>paos</code>).</li>
+</ul>
+
+<h2>Project status</h2>
+<p class="note">PhantomAOS is in early development. The JNI bridge and the real PTY engine are working. It is not yet ready for general use.</p>
+
+<h2>Build from source</h2>
+<p>The Rust core (<code>core/phantom-core</code>) is cross-compiled for Android with GitHub Actions and linked into the Android app through JNI. Source and build instructions are in the <a href="https://github.com/PhantomAOS/PhantomAOS">PhantomAOS repository</a>. PhantomAOS is released under the GPL-3.0 license.</p>
+
+<h2>Authorized use only</h2>
+<p>Use PhantomAOS only on systems and networks you own or have written permission to test. Unauthorized access or scanning is illegal, and the maintainers are not responsible for misuse.</p>
+
+<footer>PhantomAOS &middot; <a href="https://github.com/PhantomAOS/PhantomAOS">github.com/PhantomAOS/PhantomAOS</a></footer>
+</main>
+</body>
+</html>
