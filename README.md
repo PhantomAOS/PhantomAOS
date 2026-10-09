@@ -1,13 +1,13 @@
 # PhantomAOS
 
-**PhantomAOS** is a from-scratch, Rust-powered terminal and Linux environment for Android, built for security researchers, ethical hackers, and developers. No root required for core functionality. Memory-safe by design.
+**PhantomAOS** is a from-scratch, Rust-powered terminal and Linux environment for Android, built for security researchers, ethical hackers, and developers. Works on both rooted and non-rooted phones. Memory-safe by design.
 
 > Status: Early development (Phase 2 - JNI bridge + real PTY engine working). Not yet ready for general use. See ROADMAP.md for current progress.
 
 ## What makes it different
 
 - Rust core engine - real forkpty()-based terminal with full job control (Ctrl+C, Ctrl+Z, background processes), not a fake shell wrapper
-- No root required - isolated Linux environments via PRoot
+- Works on both rooted and non-rooted phones - isolated Linux environments via PRoot
 - Memory-safe by design - a security tool shouldn't itself be an attack surface
 - Built for the job - split-screen multi-terminal, macro keyboard, SSH/VNC client, curated package manager (paos)
 
