@@ -12,5 +12,6 @@ name = "phantom_pty"
 path = "src/bin/phantom_pty.rs"
 
 [dependencies]
+libc = "0.2"
 jni = "0.21"
 nix = { version = "0.27", features = ["term", "process", "fs", "signal"] }

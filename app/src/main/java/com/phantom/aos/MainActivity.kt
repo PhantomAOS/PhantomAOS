@@ -21,10 +21,11 @@ import kotlinx.coroutines.delay
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val bridge = PtyBridge(applicationInfo.nativeLibraryDir)
         setContent {
             MaterialTheme {
                 Surface(modifier = Modifier.fillMaxSize()) {
-                    TerminalScreen()
+                    TerminalScreen(bridge)
                 }
             }
         }
@@ -32,16 +33,20 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun TerminalScreen() {
+fun TerminalScreen(bridge: PtyBridge) {
     var output by remember { mutableStateOf("") }
     var input by remember { mutableStateOf("") }
-    var fd by remember { mutableStateOf(-1) }
     val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
-        fd = PtyBridge.nativeStartShell()
+        try {
+            bridge.start()
+        } catch (e: Exception) {
+            output = "Failed to start shell: ${e.message}"
+            return@LaunchedEffect
+        }
         while (true) {
-            val chunk = PtyBridge.nativeRead(fd)
+            val chunk = try { bridge.readChunk() } catch (e: Exception) { "" }
             if (chunk.isNotEmpty()) output += chunk
             delay(100)
         }
@@ -65,12 +70,12 @@ fun TerminalScreen() {
                 modifier = Modifier.weight(1f),
                 keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = ImeAction.Send),
                 keyboardActions = KeyboardActions(onSend = {
-                    PtyBridge.nativeWrite(fd, input + "\n")
+                    bridge.write(input + "\n")
                     input = ""
                 })
             )
             Button(onClick = {
-                PtyBridge.nativeWrite(fd, input + "\n")
+                bridge.write(input + "\n")
                 input = ""
             }) {
                 Text("Send")

@@ -1,22 +1,38 @@
-use nix::pty::{forkpty, Winsize};
-use nix::unistd::{execvp, read, write, ForkResult};
+use nix::fcntl::{open, OFlag};
+use nix::pty::{grantpt, posix_openpt, ptsname_r, unlockpt};
+use nix::sys::stat::Mode;
+use nix::unistd::{close, dup2, execvp, fork, read, setsid, write, ForkResult};
 use std::ffi::CString;
 use std::io::{self, Read, Write};
 use std::os::fd::AsRawFd;
 use std::thread;
 
 fn main() {
-    let winsize = Winsize { ws_row: 30, ws_col: 90, ws_xpixel: 0, ws_ypixel: 0 };
-    let result = unsafe { forkpty(Some(&winsize), None) }.expect("forkpty failed");
+    let master = posix_openpt(OFlag::O_RDWR | OFlag::O_NOCTTY).expect("posix_openpt failed");
+    grantpt(&master).expect("grantpt failed");
+    unlockpt(&master).expect("unlockpt failed");
+    let slave_path = ptsname_r(&master).expect("ptsname_r failed");
+    let master_fd = master.as_raw_fd();
 
-    match result.fork_result {
+    match unsafe { fork() }.expect("fork failed") {
         ForkResult::Child => {
+            let _ = setsid();
+            let slave_fd = open(slave_path.as_str(), OFlag::O_RDWR, Mode::empty())
+                .expect("open slave failed");
+            unsafe { libc::ioctl(slave_fd, libc::TIOCSCTTY as _, 0) };
+            let _ = dup2(slave_fd, 0);
+            let _ = dup2(slave_fd, 1);
+            let _ = dup2(slave_fd, 2);
+            if slave_fd > 2 {
+                let _ = close(slave_fd);
+            }
+            let _ = close(master_fd);
+
             let shell = CString::new("sh").unwrap();
             let _ = execvp(&shell, &[shell.clone()]);
             std::process::exit(1);
         }
         ForkResult::Parent { child } => {
-            let master_fd = result.master.as_raw_fd();
             let reader = thread::spawn(move || {
                 let mut buf = [0u8; 4096];
                 loop {
@@ -29,7 +45,6 @@ fn main() {
                     }
                 }
             });
-
             let mut buf = [0u8; 4096];
             loop {
                 match io::stdin().read(&mut buf) {
