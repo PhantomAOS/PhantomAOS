@@ -30,7 +30,7 @@ jobs:
         working-directory: core/phantom-core
         env:
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-        run: cargo ndk -t arm64-v8a -p 26 -o ./output build --release
+        run: cargo ndk -t arm64-v8a -P 26 -o ./output build --release
 
       - name: Package phantom_pty as a fake .so (Android exec workaround)
         working-directory: core/phantom-core
