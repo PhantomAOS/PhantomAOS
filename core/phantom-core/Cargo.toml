@@ -7,6 +7,10 @@ edition = "2021"
 name = "phantom_core"
 crate-type = ["cdylib"]
 
+[[bin]]
+name = "phantom_pty"
+path = "src/bin/phantom_pty.rs"
+
 [dependencies]
 jni = "0.21"
 nix = { version = "0.27", features = ["term", "process", "fs", "signal"] }
